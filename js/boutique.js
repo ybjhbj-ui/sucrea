@@ -187,11 +187,12 @@ function addBouquetToCart(qty, basePrice) {
     if(document.getElementById(`opt-doudou-${qty}`).checked) { finalPrice += 3; opts.push("Petite Peluche"); }
     if(document.getElementById(`opt-doudou-m-${qty}`).checked) { finalPrice += 15; opts.push("Moyenne Peluche"); }
 
-    const initType = document.getElementById(`opt-init-${qty}`).value;
+   const initType = document.getElementById(`opt-init-${qty}`).value;
     if(initType) {
         finalPrice += 3; 
-        const le = document.getElementById(`init-text-${qty}`).value;
-        opts.push(`Initiale ${initType} (${let})`);
+        // On utilise "lettre" car "let" est un mot interdit par le code
+        const lettre = document.getElementById(`init-text-${qty}`).value;
+        opts.push(`Initiale ${initType} (${lettre})`);
     }
 
     const stickType = document.getElementById(`opt-sticker-type-${qty}`).value;
