@@ -37,7 +37,7 @@ function showToast(msg) {
     else alert(msg);
 }
 
-// Mise à jour des totaux
+// Mise à jour des totaux (Gère l'affichage Europe)
 function updateTotal() {
     const cart = getCart();
     let subtotal = 0;
@@ -51,7 +51,8 @@ function updateTotal() {
     const bAddr = document.getElementById('bloc-adresse');
     const bDate = document.getElementById('bloc-date');
     
-    if(['france','international'].includes(mode)) {
+    // Si France ou Europe -> Adresse visible
+    if(['france','europe'].includes(mode)) {
         if(bAddr) bAddr.style.display = 'block';
         if(bDate) bDate.style.display = 'none';
     } else {
@@ -110,6 +111,7 @@ function renderCartPage() {
     updateTotal();
 }
 
+// Validation Commande (Inclut le message et le code commande)
 function checkoutEmail() {
     const cart = getCart();
     if(cart.length === 0) return showToast("Panier vide !");
@@ -117,6 +119,7 @@ function checkoutEmail() {
     const nom = getVal('client-name');
     const phone = getVal('client-phone');
     const insta = getVal('client-insta');
+    const msgPerso = getVal('client-msg'); // Message du client
     
     if(!nom || !phone) return showToast("⚠️ Nom et Téléphone obligatoires.");
     
@@ -125,16 +128,16 @@ function checkoutEmail() {
     const mode = delOpt.value;
     
     // GÉNÉRATION DU NUMÉRO DE COMMANDE
-    const orderId = 'CMD-' + Math.floor(1000 + Math.random() * 9000); // Ex: CMD-4821
+    const orderId = 'CMD-' + Math.floor(1000 + Math.random() * 9000);
 
     let detailsLivraison = "";
     let warningMsg = "";
 
-    if(['france','international'].includes(mode)) {
+    if(['france','europe'].includes(mode)) {
         const adr = getVal('livraison-adresse');
         const ville = getVal('livraison-ville');
         if(!adr || !ville) return showToast("⚠️ Adresse incomplète.");
-        detailsLivraison = `Livraison: ${adr}, ${ville}`;
+        detailsLivraison = `Livraison (${mode.toUpperCase()}): ${adr}, ${ville}`;
     } else {
         const dateRetrait = getVal('retrait-date');
         const heureRetrait = getVal('retrait-time');
@@ -154,7 +157,7 @@ function checkoutEmail() {
     cart.forEach(i => subtotal += i.price);
     const total = subtotal + shipping;
 
-    // Construction du mail avec le numéro de commande
+    // Construction du mail
     let body = `Bonjour Sun Creation,\n\nJe souhaite valider ma commande n° ${orderId} :\n\n`;
     body += `👤 ${nom}\n📞 ${phone}\n`;
     if(insta) body += `📸 Insta: ${insta}\n`;
@@ -166,10 +169,13 @@ function checkoutEmail() {
         if(i.desc) body += `  Options: ${i.desc}\n`; 
     });
     
+    // Ajout du message perso s'il existe
+    if(msgPerso) {
+        body += `\n📝 MESSAGE / PRÉCISION :\n"${msgPerso}"\n`;
+    }
+    
     body += `\n💰 TOTAL : ${total}€\n💳 ACOMPTE À VERSER (40%) : ${(total * 0.40).toFixed(2)}€\n\n`;
     body += `Merci de m'envoyer le RIB pour le virement !`;
-    
-    // Note sur la photo
     body += `\n\n(Je vous enverrai la photo éventuelle en réponse à ce mail)`;
 
     window.location.href = `mailto:Sncreat24@gmail.com?subject=COMMANDE ${orderId} - SUN CREATION&body=${encodeURIComponent(body)}`;
