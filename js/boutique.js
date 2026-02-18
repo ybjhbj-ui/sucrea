@@ -19,7 +19,7 @@ const LISTE_BOXES = [
         title: 'Box Gourmande 20cm', 
         priceFleur: 43, 
         priceChoco: 53, 
-        doudouPrice: 12, // 43 + 12 = 55€
+        doudouPrice: 7.50, // PRIX MODIFIÉ : 7.50€
         img: 'images/box_choco_20.jpg' 
     },
     { 
@@ -27,7 +27,7 @@ const LISTE_BOXES = [
         title: 'Box Gourmande 30cm', 
         priceFleur: 60, 
         priceChoco: 70, 
-        doudouPrice: 12, // 60 + 12 = 72€
+        doudouPrice: 7.50, // PRIX MODIFIÉ : 7.50€
         img: 'images/box_choco_30.jpg' 
     }
 ];
@@ -119,7 +119,10 @@ function renderRoses() {
                     
                     <div style="margin-top:5px; margin-bottom:5px; padding:5px; background:#fff; border-radius:5px;">
                         <label class="opt-label" style="display:inline-block; margin-top:0;">🍫 Pique Ferrero (1€/u) :</label>
-                        <input type="number" id="opt-pique-${id}" class="form-control" style="width:70px; display:inline-block; margin-left:10px;" min="0" max="20" value="0">
+                        <input type="number" id="opt-pique-${id}" class="form-control" 
+                               style="width:70px; display:inline-block; margin-left:10px;" 
+                               min="0" max="20" value="0"
+                               oninput="if(this.value > 20){ alert('Maximum 20 Ferreros !'); this.value = 20; }">
                         <small style="color:#666; display:block; font-size:0.75rem;">(Max 20 unités)</small>
                     </div>
 
@@ -195,7 +198,7 @@ function addBouquetToCart(qty, basePrice) {
     // GESTION PIQUE FERRERO (Quantité)
     const nbPique = parseInt(document.getElementById(`opt-pique-${qty}`).value) || 0;
     if(nbPique > 0) {
-        // Sécurité Max 20
+        // Sécurité Max 20 côté JS aussi
         const validQty = Math.min(nbPique, 20);
         finalPrice += (validQty * 1); // 1€ par unité
         opts.push(`Pique Ferrero (x${validQty})`);
@@ -289,7 +292,7 @@ function renderBoxes() {
                     <label class="opt-label mt-2">Doudous :</label>
                     <select id="box-doudou-${box.id}" class="form-control">
                         <option value="0">Aucun</option>
-                        <option value="${box.doudouPrice}">🧸 Doudou(s) (+${box.doudouPrice}€)</option>
+                        <option value="${box.doudouPrice}">🧸 2 Doudous (+${box.doudouPrice.toFixed(2)}€)</option>
                     </select>
 
                     <label class="opt-label mt-2">Accessoires :</label>
@@ -345,8 +348,12 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
     // Options communes
     if(document.getElementById(`box-topper-${id}`).checked) { finalPrice += 2; details.push("Topper"); }
 
-    const doudouVal = parseInt(document.getElementById(`box-doudou-${id}`).value);
-    if(doudouVal > 0) { finalPrice += doudouVal; details.push(`Doudou(s)`); }
+    // DOUDOU CORRIGÉ : On utilise parseFloat pour gérer les centimes (7.50€)
+    const doudouVal = parseFloat(document.getElementById(`box-doudou-${id}`).value);
+    if(doudouVal > 0) { 
+        finalPrice += doudouVal; 
+        details.push(`2 Doudous`); 
+    }
 
     const bandeType = document.getElementById(`box-bande-type-${id}`).value;
     if(bandeType) {
