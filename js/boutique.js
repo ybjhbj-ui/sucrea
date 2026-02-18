@@ -12,13 +12,27 @@ const LISTE_BOUQUETS = [
 const COULEURS_ROSES = ["Rouge ❤️", "Blanc 🤍", "Noir 🖤", "Rose 🌸", "Violet 💜", "Bleu Clair ❄️", "Bleu Foncé 🔵"];
 const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno", "Mix Kinder/Ferrero"];
 
-// Box 30cm à 72€
+// PRIX ET CONFIGURATION DES BOXES GOURMANDES
 const LISTE_BOXES = [
-    { id: 'box20', title: 'Box Gourmande 20cm', basePrice: 45, img: 'images/box_choco_20.jpg' },
-    { id: 'box30', title: 'Box Gourmande 30cm', basePrice: 72, img: 'images/box_choco_30.jpg' }
+    { 
+        id: 'box20', 
+        title: 'Box Gourmande 20cm', 
+        priceFleur: 43, 
+        priceChoco: 53, 
+        doudouPrice: 12, // 43 + 12 = 55€
+        img: 'images/box_choco_20.jpg' 
+    },
+    { 
+        id: 'box30', 
+        title: 'Box Gourmande 30cm', 
+        priceFleur: 60, 
+        priceChoco: 70, 
+        doudouPrice: 12, // 60 + 12 = 72€
+        img: 'images/box_choco_30.jpg' 
+    }
 ];
 
-// Liste complète
+// Liste complète Emballages
 function getEmballageOptions() {
     return `
     <optgroup label="--- STANDARD (Inclus) ---">
@@ -109,20 +123,16 @@ function renderRoses() {
                     <label class="opt-check"><input type="checkbox" id="opt-diam-all-${id}"> 💎 Diamants (Toutes les roses) (+4€)</label>
                     
                     <label class="opt-check"><input type="checkbox" id="opt-pail-${id}"> ✨ Paillettes (Offert)</label>
-                    
                     <label class="opt-check"><input type="checkbox" id="opt-perle-${id}"> ⚪ Perles sur emballage (+8€)</label>
-                    
                     <label class="opt-check"><input type="checkbox" id="opt-crown-${id}"> 👑 Grande Couronne (+10€)</label>
                     <label class="opt-check"><input type="checkbox" id="opt-crown-mini-${id}"> 👑 Mini Couronne (Décorative) (+4€)</label>
                     <label class="opt-check"><input type="checkbox" id="opt-led-${id}"> 💡 Guirlande LED (+5€)</label>
-                    
                     <label class="opt-check"><input type="checkbox" id="opt-doudou-${id}"> 🧸 Petite Peluche (+3€)</label>
                     <label class="opt-check"><input type="checkbox" id="opt-doudou-m-${id}"> 🧸 Moyenne Peluche (+15€)</label>
                 </div>
 
                 <div class="perso-box">
                     <strong style="display:block; margin-bottom:5px;">Personnalisation :</strong>
-                    
                     <label class="opt-label mt-2">Initiale (+3€) :</label>
                     <select id="opt-init-${id}" class="form-control" onchange="toggleSelect('opt-init-${id}', 'init-text-wrapper-${id}')">
                         <option value="">Aucune</option>
@@ -171,7 +181,7 @@ function addBouquetToCart(qty, basePrice) {
     const pack = document.getElementById(`pack-${qty}`).value;
     if(pack.includes("Luxe")) finalPrice += 5;
 
-    // Accessoires
+    // Accessoires (Code identique)
     if(document.getElementById(`opt-pap-${qty}`).checked) { finalPrice += 2; opts.push("Papillon"); }
     if(document.getElementById(`opt-noeud-${qty}`).checked) { finalPrice += 3; opts.push("Nœud Tulle"); }
     if(document.getElementById(`opt-noeud-luxe-${qty}`).checked) { finalPrice += 5; opts.push("Nœud Luxe"); }
@@ -187,10 +197,9 @@ function addBouquetToCart(qty, basePrice) {
     if(document.getElementById(`opt-doudou-${qty}`).checked) { finalPrice += 3; opts.push("Petite Peluche"); }
     if(document.getElementById(`opt-doudou-m-${qty}`).checked) { finalPrice += 15; opts.push("Moyenne Peluche"); }
 
-   const initType = document.getElementById(`opt-init-${qty}`).value;
+    const initType = document.getElementById(`opt-init-${qty}`).value;
     if(initType) {
         finalPrice += 3; 
-        // On utilise "lettre" car "let" est un mot interdit par le code
         const lettre = document.getElementById(`init-text-${qty}`).value;
         opts.push(`Initiale ${initType} (${lettre})`);
     }
@@ -224,7 +233,7 @@ function addBouquetToCart(qty, basePrice) {
     });
 }
 
-// --- 2. BOXES ---
+// --- 2. BOXES (LOGIQUE PRIX MODIFIÉE) ---
 function renderBoxes() {
     const container = document.getElementById('page-boxes');
     if (!container) return;
@@ -234,34 +243,43 @@ function renderBoxes() {
             <div class="card-image"><img src="${box.img}"></div>
             <div class="card-info">
                 <h3>${box.title}</h3>
-                <p class="card-price">Dès ${box.basePrice} €</p>
                 
-                <label class="opt-label">Côté Fleurs (Couleur) :</label>
-                <select id="box-fleur-${box.id}" class="form-control mb-10">${COULEURS_ROSES.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                <label class="opt-label">Style de la Box :</label>
+                <select id="box-style-${box.id}" class="form-control mb-10" onchange="toggleBoxOptions('${box.id}', ${box.priceFleur}, ${box.priceChoco})">
+                    <option value="Fleurs">Côté Fleurs (Mixte)</option>
+                    <option value="Choco">100% Chocolat</option>
+                </select>
 
-                <label class="opt-label">Côté Chocolats :</label>
+                <p class="card-price" id="price-display-${box.id}">${box.priceFleur} €</p>
+                
+                <div id="opts-fleurs-${box.id}">
+                    <label class="opt-label">Côté Fleurs (Couleur) :</label>
+                    <select id="box-fleur-${box.id}" class="form-control mb-10">${COULEURS_ROSES.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                    
+                    <div class="perso-box">
+                        <label class="opt-label">Ajouter Initiale (+5€) :</label>
+                        <select id="box-init-${box.id}" class="form-control" onchange="toggleSelect('box-init-${box.id}', 'box-letter-wrapper-${box.id}')">
+                            <option value="">Non</option>
+                            <option value="Roses">Oui (En Roses)</option>
+                            <option value="Perles">Oui (En Perles)</option>
+                        </select>
+                        <div id="box-letter-wrapper-${box.id}" class="hidden"><input type="text" id="box-letter-${box.id}" class="form-control" placeholder="Lettre"></div>
+                    </div>
+                </div>
+
+                <label class="opt-label">Choix Chocolats :</label>
                 <select id="choco-${box.id}" class="form-control mb-10">${CHOCOLATS.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
 
-                <div class="perso-box">
-                    <label class="opt-label">Ajouter Initiale (+3€) :</label>
-                    <select id="box-init-${box.id}" class="form-control" onchange="toggleSelect('box-init-${box.id}', 'box-letter-wrapper-${box.id}')">
-                        <option value="">Non</option>
-                        <option value="Roses">Oui (En Roses)</option>
-                        <option value="Perles">Oui (En Perles)</option>
+                <div class="options-box">
+                    <label class="opt-label mt-2">Doudous :</label>
+                    <select id="box-doudou-${box.id}" class="form-control">
+                        <option value="0">Aucun</option>
+                        <option value="${box.doudouPrice}">🧸 Doudou(s) (+${box.doudouPrice}€)</option>
                     </select>
-                    <div id="box-letter-wrapper-${box.id}" class="hidden"><input type="text" id="box-letter-${box.id}" class="form-control" placeholder="Lettre"></div>
 
                     <label class="opt-label mt-2">Accessoires :</label>
                     <label class="opt-check"><input type="checkbox" id="box-topper-${box.id}"> 🎂 Topper (+2€)</label>
                     
-                    <label class="opt-label mt-2">Doudous :</label>
-                    <select id="box-doudou-${box.id}" class="form-control">
-                        <option value="0">Aucun</option>
-                        <option value="3">🧸 1 Petit Doudou (+3€)</option>
-                        <option value="6">🧸🧸 2 Petits Doudous (+6€)</option>
-                        <option value="15">🧸 1 Moyen Doudou (+15€)</option>
-                    </select>
-
                     <label class="opt-label mt-2">Bande Personnalisée :</label>
                     <select id="box-bande-type-${box.id}" class="form-control" onchange="toggleSelect('box-bande-type-${box.id}', 'box-bande-wrapper-${box.id}')">
                         <option value="">Aucune</option>
@@ -270,28 +288,50 @@ function renderBoxes() {
                     </select>
                     <div id="box-bande-wrapper-${box.id}" class="hidden"><input type="text" id="box-bande-${box.id}" class="form-control" placeholder="Texte sur ruban..."></div>
                 </div>
-                <button class="btn-discover" style="width:100%;" onclick="addBoxToCart('${box.id}', '${box.title}', ${box.basePrice}, '${box.img}')">Ajouter</button>
+
+                <button class="btn-discover" style="width:100%;" onclick="addBoxToCart('${box.id}', '${box.title}', ${box.priceFleur}, ${box.priceChoco})">Ajouter</button>
             </div>
         </div>`).join('');
 }
 
-function addBoxToCart(id, title, basePrice, img) {
-    let finalPrice = basePrice;
+// Fonction pour cacher les options fleurs si "100% Chocolat" est choisi
+window.toggleBoxOptions = function(id, priceFleur, priceChoco) {
+    const style = document.getElementById(`box-style-${id}`).value;
+    const optsFleurs = document.getElementById(`opts-fleurs-${id}`);
+    const display = document.getElementById(`price-display-${id}`);
+
+    if(style === 'Choco') {
+        optsFleurs.classList.add('hidden');
+        display.innerText = priceChoco + " €";
+    } else {
+        optsFleurs.classList.remove('hidden');
+        display.innerText = priceFleur + " €";
+    }
+}
+
+function addBoxToCart(id, title, priceFleur, priceChoco) {
+    const style = document.getElementById(`box-style-${id}`).value;
+    let finalPrice = (style === 'Choco') ? priceChoco : priceFleur;
     let details = [];
 
-    details.push(`Fleurs: ${document.getElementById(`box-fleur-${id}`).value}`);
+    details.push(`Style: ${style}`);
     details.push(`Choco: ${document.getElementById(`choco-${id}`).value}`);
 
-    const init = document.getElementById(`box-init-${id}`).value;
-    if (init) {
-        finalPrice += 3;
-        details.push(`Initiale ${init}: ${document.getElementById(`box-letter-${id}`).value}`);
+    // Options si mode Fleurs
+    if(style === 'Fleurs') {
+        details.push(`Fleurs: ${document.getElementById(`box-fleur-${id}`).value}`);
+        const init = document.getElementById(`box-init-${id}`).value;
+        if (init) {
+            finalPrice += 5; // Initiale passée à 5€
+            details.push(`Initiale ${init}: ${document.getElementById(`box-letter-${id}`).value}`);
+        }
     }
-    
+
+    // Options communes
     if(document.getElementById(`box-topper-${id}`).checked) { finalPrice += 2; details.push("Topper"); }
 
     const doudouVal = parseInt(document.getElementById(`box-doudou-${id}`).value);
-    if(doudouVal > 0) { finalPrice += doudouVal; details.push(`Doudou (${doudouVal}€)`); }
+    if(doudouVal > 0) { finalPrice += doudouVal; details.push(`Doudou(s)`); }
 
     const bandeType = document.getElementById(`box-bande-type-${id}`).value;
     if(bandeType) {
@@ -299,21 +339,21 @@ function addBoxToCart(id, title, basePrice, img) {
         details.push(`Bande: "${document.getElementById(`box-bande-${id}`).value}"`);
     }
 
-    addToCart({ title, price: finalPrice, image: img, desc: details.join(' | ') });
+    addToCart({ title, price: finalPrice, image: `images/${id === 'box30' ? 'box_choco_30.jpg' : 'box_choco_20.jpg'}`, desc: details.join(' | ') });
 }
 
-// --- 3. LOVE BOX ---
+// --- 3. LOVE BOX (BASE 55€ + 5€ par lettre choco) ---
 function renderLove() {
     const container = document.getElementById('page-love');
     if (!container) return;
     
-    const basePrice = 65; 
+    const basePrice = 55; // PRIX DE BASE BAISSÉ À 55€
 
     const getTypeSelector = (label, prefix) => `
         <label class="opt-label">${label} :</label>
         <select id="love-${prefix}-type" class="form-control mb-10" onchange="updateLoveOption('${prefix}')">
             <option value="Fleurs">Fleurs</option>
-            <option value="Chocolats">Chocolats</option>
+            <option value="Chocolats">Chocolats (+5€)</option>
         </select>
         <div id="love-${prefix}-fleurs" class="">
             <select id="love-${prefix}-color" class="form-control mb-10">
@@ -332,7 +372,7 @@ function renderLove() {
             <div class="card-image"><img src="images/photo_lit_love.jpg"></div>
             <div class="card-info">
                 <h3>Composition I ❤️ U</h3>
-                <p class="card-price" style="font-size:2rem;">${basePrice} €</p>
+                <p class="card-price" style="font-size:2rem;">Dès ${basePrice} €</p>
                 
                 <div style="text-align:left;">
                     ${getTypeSelector('Lettre "I"', 'i')}
@@ -369,7 +409,7 @@ window.updateLoveOption = function(prefix) {
 }
 
 function addLoveToCart() {
-    let price = 65;
+    let price = 55; // PRIX DE BASE 55€
     let opts = [];
 
     ['i', 'heart', 'u'].forEach(prefix => {
@@ -379,6 +419,7 @@ function addLoveToCart() {
             val = document.getElementById(`love-${prefix}-color`).value;
         } else {
             val = document.getElementById(`love-${prefix}-gout`).value;
+            price += 5; // AJOUTE 5€ PAR LETTRE CHOCOLAT
         }
         const label = prefix === 'heart' ? '❤️' : prefix.toUpperCase();
         opts.push(`${label}: ${type} (${val})`);
@@ -393,7 +434,7 @@ function addLoveToCart() {
     addToCart({ title: "Love Box I ❤️ U", price: price, image: "images/photo_lit_love.jpg", desc: opts.join(' | ') });
 }
 
-// Helpers CSS injectés pour le style
+// Helpers CSS
 const style = document.createElement('style');
 style.innerHTML = `
     .opt-label { display:block; text-align:left; font-weight:bold; font-size:0.85rem; margin-top:10px; }
@@ -407,31 +448,21 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// --- NOUVELLES FONCTIONS DE TOGGLE CORRECTES ---
-// Pour les menus déroulants (Select)
 window.toggleSelect = function(triggerId, targetId) {
     const trigger = document.getElementById(triggerId);
     const target = document.getElementById(targetId);
     if(trigger && target) {
-        // Si vide ou "0" (ex: "Aucun"), on cache. Sinon on affiche.
-        if(trigger.value !== "" && trigger.value !== "0") {
-            target.classList.remove('hidden');
-        } else {
-            target.classList.add('hidden');
-        }
+        if(trigger.value !== "" && trigger.value !== "0") target.classList.remove('hidden');
+        else target.classList.add('hidden');
     }
 }
 
-// Pour les cases à cocher (Checkbox)
 window.toggleCheck = function(triggerId, targetId) {
     const trigger = document.getElementById(triggerId);
     const target = document.getElementById(targetId);
     if(trigger && target) {
-        if(trigger.checked) {
-            target.classList.remove('hidden');
-        } else {
-            target.classList.add('hidden');
-        }
+        if(trigger.checked) target.classList.remove('hidden');
+        else target.classList.add('hidden');
     }
 }
 
