@@ -10,7 +10,7 @@ const LISTE_BOUQUETS = [
 ];
 
 const COULEURS_ROSES = ["Rouge ❤️", "Blanc 🤍", "Noir 🖤", "Rose 🌸", "Violet 💜", "Bleu Clair ❄️", "Bleu Foncé 🔵"];
-const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno", "Mix Kinder/Ferrero"];
+const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno"];
 
 // PRIX ET CONFIGURATION DES BOXES GOURMANDES
 const LISTE_BOXES = [
@@ -19,7 +19,7 @@ const LISTE_BOXES = [
         title: 'Box Gourmande 20cm', 
         priceFleur: 43, 
         priceChoco: 53, 
-        doudouPrice: 7.50, // PRIX MODIFIÉ : 7.50€
+        doudouPrice: 7.50, // 2 doudous
         img: 'images/box_choco_20.jpg' 
     },
     { 
@@ -27,7 +27,7 @@ const LISTE_BOXES = [
         title: 'Box Gourmande 30cm', 
         priceFleur: 60, 
         priceChoco: 70, 
-        doudouPrice: 7.50, // PRIX MODIFIÉ : 7.50€
+        doudouPrice: 7.50, // 2 doudous
         img: 'images/box_choco_30.jpg' 
     }
 ];
@@ -198,7 +198,7 @@ function addBouquetToCart(qty, basePrice) {
     // GESTION PIQUE FERRERO (Quantité)
     const nbPique = parseInt(document.getElementById(`opt-pique-${qty}`).value) || 0;
     if(nbPique > 0) {
-        // Sécurité Max 20 côté JS aussi
+        // Sécurité Max 20 côté JS
         const validQty = Math.min(nbPique, 20);
         finalPrice += (validQty * 1); // 1€ par unité
         opts.push(`Pique Ferrero (x${validQty})`);
@@ -251,7 +251,7 @@ function addBouquetToCart(qty, basePrice) {
     });
 }
 
-// --- 2. BOXES (LOGIQUE PRIX MODIFIÉE) ---
+// --- 2. BOXES (CHOCOLATS MULTIPLES + DOUDOU 7.50€) ---
 function renderBoxes() {
     const container = document.getElementById('page-boxes');
     if (!container) return;
@@ -285,8 +285,14 @@ function renderBoxes() {
                     </div>
                 </div>
 
-                <label class="opt-label">Choix Chocolats :</label>
-                <select id="choco-${box.id}" class="form-control mb-10">${CHOCOLATS.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                <label class="opt-label">Choix Chocolats (Cochez vos préférés) :</label>
+                <div class="options-box" id="choco-wrapper-${box.id}">
+                    ${CHOCOLATS.map(c => `
+                        <label class="opt-check">
+                            <input type="checkbox" name="choco-check-${box.id}" value="${c}"> ${c}
+                        </label>
+                    `).join('')}
+                </div>
 
                 <div class="options-box">
                     <label class="opt-label mt-2">Doudous :</label>
@@ -312,7 +318,6 @@ function renderBoxes() {
         </div>`).join('');
 }
 
-// Fonction pour cacher les options fleurs si "100% Chocolat" est choisi
 window.toggleBoxOptions = function(id, priceFleur, priceChoco) {
     const style = document.getElementById(`box-style-${id}`).value;
     const optsFleurs = document.getElementById(`opts-fleurs-${id}`);
@@ -333,7 +338,11 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
     let details = [];
 
     details.push(`Style: ${style}`);
-    details.push(`Choco: ${document.getElementById(`choco-${id}`).value}`);
+    
+    // Récupération des chocolats cochés
+    const checkedChocos = Array.from(document.querySelectorAll(`input[name="choco-check-${id}"]:checked`)).map(cb => cb.value);
+    const chocoString = checkedChocos.length > 0 ? checkedChocos.join(', ') : "Surprise (Mix)";
+    details.push(`Chocos: ${chocoString}`);
 
     // Options si mode Fleurs
     if(style === 'Fleurs') {
@@ -348,7 +357,7 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
     // Options communes
     if(document.getElementById(`box-topper-${id}`).checked) { finalPrice += 2; details.push("Topper"); }
 
-    // DOUDOU CORRIGÉ : On utilise parseFloat pour gérer les centimes (7.50€)
+    // DOUDOU CORRIGÉ
     const doudouVal = parseFloat(document.getElementById(`box-doudou-${id}`).value);
     if(doudouVal > 0) { 
         finalPrice += doudouVal; 
