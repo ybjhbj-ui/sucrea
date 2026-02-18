@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Panier - Sun Creation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" style="font-weight:bold;">SUN CREATION</a>
+    </nav>
+
+    <div class="cart-wrapper">
+        <div class="left-col">
+            <div class="white-box">
+                <h2 style="font-family: 'Playfair Display'; margin-top:0;">1. Récapitulatif</h2>
+                <div id="cart-items-container"></div>
+            </div>
+
+            <div class="white-box">
+                <h2 style="font-family: 'Playfair Display'; margin-top:0;">2. Coordonnées</h2>
+                <div class="form-group"><input type="text" id="client-name" class="form-control" placeholder="Prénom & Nom *"></div>
+                <div class="form-group"><input type="tel" id="client-phone" class="form-control" placeholder="Téléphone *"></div>
+                <div class="form-group"><input type="text" id="client-insta" class="form-control" placeholder="Instagram (Facultatif)"></div>
+            </div>
+
+            <div class="white-box">
+                <h2 style="font-family: 'Playfair Display'; margin-top:0;">3. Mode de réception</h2>
+                
+                <label class="radio-option">
+                    <div><input type="radio" name="delivery" value="retrait" data-price="0" checked onchange="updateTotal()"> Retrait Atelier (Gonesse)</div>
+                    <span>Gratuit</span>
+                </label>
+                
+                <label class="radio-option">
+                    <div><input type="radio" name="delivery" value="uber" data-price="0" onchange="updateTotal()"> Remise Chauffeur / Uber</div>
+                    <span>0 € *</span>
+                </label>
+                <div style="font-size:0.8rem; color:#666; margin:-5px 0 15px 30px; line-height:1.4; background:#f9f9f9; padding:10px; border-radius:5px;">
+                    * <strong>Fonctionnement Uber :</strong><br>
+                    1. Validez votre commande ici.<br>
+                    2. Le jour J, vous commandez vous-même votre coursier (Uber/Bolt option "Colis").<br>
+                    3. Le chauffeur récupère la commande à notre atelier.
+                </div>
+
+                <label class="radio-option" style="margin-top:10px;">
+                    <div><input type="radio" name="delivery" value="france" data-price="12" onchange="updateTotal()"> Envoi France (Colissimo)</div>
+                    <span>+12 €</span>
+                </label>
+                
+                <label class="radio-option">
+                    <div><input type="radio" name="delivery" value="international" data-price="20" onchange="updateTotal()"> Envoi Europe</div>
+                    <span>+20 €</span>
+                </label>
+                
+                <div id="bloc-date" style="margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+                    <p style="font-size:0.9rem; font-weight:bold;">Date et Heure souhaitée :</p>
+                    <input type="date" id="retrait-date" class="form-control" style="margin-bottom:10px;">
+                    <input type="time" id="retrait-time" class="form-control">
+                    <small style="color:#d4a373;">⚠️ Délai de confection : 7 jours minimum</small>
+                </div>
+
+                <div id="bloc-adresse" style="display:none; margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+                    <input type="text" id="livraison-adresse" class="form-control" placeholder="Adresse complète">
+                    <input type="text" id="livraison-ville" class="form-control" placeholder="Ville & Code Postal">
+                </div>
+            </div>
+        </div>
+
+        <div class="white-box" style="position: sticky; top: 100px;">
+            <h3 style="font-family: 'Playfair Display'; margin-top:0; text-align:center;">Total</h3>
+            <div style="display:flex; justify-content:space-between;"><span>Sous-total</span><span><span id="cart-subtotal">0</span> €</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>Livraison</span><span><span id="shipping-cost">0</span> €</span></div>
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem; margin-top:10px;"><span>TOTAL</span><span><span id="cart-total">0</span> €</span></div>
+            
+            <div style="background:#fff9fa; border:1px solid #eec0c6; padding:15px; border-radius:10px; text-align:center; margin-top:20px;">
+                <div>ACOMPTE À PAYER (40%)</div>
+                <span style="color:#D4AF37; font-size:1.5rem; font-weight:bold;"><span id="cart-acompte">0</span> €</span>
+                <p style="font-size:0.75rem; color:#888; margin:5px 0 0;">Le solde sera à régler à la livraison/retrait.</p>
+            </div>
+            
+            <button onclick="checkoutEmail()" class="btn-discover" style="width:100%; background:#111; color:white; border:none; margin-top:15px;">
+                Valider la commande 📩
+            </button>
+        </div>
+    </div>
+    
+    <footer style="text-align:center; margin-top:40px; font-size:0.8rem; color:#aaa; margin-bottom:80px;">
+        <p>&copy; 2026 Sun Creation</p>
+        <p><a href="mentions.html" style="text-decoration:underline;">Mentions Légales</a> - <a href="cgv.html" style="text-decoration:underline;">CGV</a></p>
+    </footer>
+
+    <div id="toast">Message</div>
+    <script src="js/main.js"></script>
+</body>
+</html>

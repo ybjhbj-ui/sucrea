@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun Creation - L'Art d'Offrir</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* CSS SPÉCIFIQUE POUR L'ACCUEIL */
+        body {
+            background-color: #fcfcfc; /* Fond très clair et pur */
+        }
+        
+        /* BANNIÈRE HÉRO (La grande image du haut) */
+        .hero-section {
+            position: relative;
+            height: 55vh; /* Prend 60% de la hauteur de l'écran */
+            background-image: url('images/hero_banner.jpg'); /* Mets ta photo 1000008004.png ici */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* Assombrit l'image pour lire le texte */
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .hero-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* LES 3 CARTES (COLLECTIONS) */
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: -50px auto 50px; /* Remonte un peu sur la bannière */
+            padding: 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .collection-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Ombre douce */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .collection-card:hover {
+            transform: translateY(-10px); /* Monte légèrement au survol */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            height: 350px; /* Images bien hautes */
+            overflow: hidden;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .collection-card:hover .card-image img {
+            transform: scale(1.05); /* Zoom lent sur l'image */
+        }
+
+        .card-content {
+            padding: 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #2c2c2c;
+            margin-bottom: 15px;
+        }
+
+        .card-desc {
+            font-family: 'Montserrat', sans-serif;
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-discover {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 1px solid #D4AF37; /* Couleur Or */
+            color: #D4AF37;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .btn-discover:hover {
+            background: #D4AF37;
+            color: white;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .collections-grid { margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav style="position: absolute; top:0; width:100%; z-index:10; padding: 20px; text-align: center;">
+        <a href="index.html" style="color:white; text-decoration:none; font-weight:bold; font-size:1.1rem; text-shadow: 1px 1px 2px black;">SUN CREATION</a>
+        <a href="panier.html" style="color:white; text-decoration:none; margin-left:20px; font-size:1.1rem; text-shadow: 1px 1px 2px black;">🛒 Panier</a>
+    </nav>
+
+    <header class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Dites-le avec Exception</h1>
+            <p class="hero-subtitle">Roses de luxe & Compositions sur-mesure</p>
+        </div>
+    </header>
+
+    <section class="collections-grid">
+
+        <article class="collection-card">
+            <div class="card-image">
+                <img src="images/photo_femmes_bouquets.jpg" onerror="this.src='https://via.placeholder.com/400x500?text=Nos+Bouquets'">
+            </div>
+            <div class="card-content">
+                <h2 class="card-title">L'Élégance Florale</h2>
+                <p class="card-desc">
+                    Des roses fraîches d'une qualité exceptionnelle, sublimées par nos emballages signature noirs ou blancs. 
+                    Ajoutez une touche de magie avec nos couronnes et diamants.
+                </p>
+                <a href="roses.html" class="btn-discover">Configurer mon Bouquet</a>
+            </div>
+        </article>
+
+        <article class="collection-card">
+            <div class="card-image">
+                <img src="images/box_choco_20.jpg" onerror="this.src='https://via.placeholder.com/400x500?text=Gourmandise'">
+            </div>
+            <div class="card-content">
+                <h2 class="card-title">Douceur Gourmande</h2>
+                <p class="card-desc">
+                    L'alliance parfaite entre la beauté des fleurs et le plaisir du chocolat. 
+                    Garnies de Ferrero Rocher ou Kinder pour un cadeau qui se savoure.
+                </p>
+                <a href="boxes.html" class="btn-discover">Choisir ma Box</a>
+            </div>
+        </article>
+
+        <article class="collection-card">
+            <div class="card-image">
+                <img src="images/photo_lit_love.jpg" onerror="this.src='https://via.placeholder.com/400x500?text=Love+Box'">
+            </div>
+            <div class="card-content">
+                <h2 class="card-title">La Love Box</h2>
+                <p class="card-desc">
+                    Une déclaration inoubliable. Notre composition signature en forme de lettres "I ❤️ U", 
+                    accompagnée de ballons pour un effet "Wow" garanti.
+                </p>
+                <a href="love.html" class="btn-discover">Voir la Love Box</a>
+            </div>
+        </article>
+
+    </section>
+
+    <footer style="text-align: center; padding: 40px 20px; color: #888; background: #fff;">
+        <p style="margin-bottom:10px;">Suivez nos créations sur Instagram <strong style="color:#D4AF37">@suncreation_</strong></p>
+        <p style="font-size: 0.8rem;">&copy; 2026 Sun Creation - Paris / Gonesse</p>
+    </footer>
+
+</body>
+</html>

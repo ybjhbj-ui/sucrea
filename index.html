@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun Creation - L'Exception</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>.hero-home { background-image: url('images/hero_banner.jpg'); background-position: center 35%; }</style>
+</head>
+<body>
+    <div id="preloader"><div class="loader-content"><div class="loader-logo">SUN CREATION</div><div class="loader-line"></div></div></div>
+
+  <nav style="background-color: white; padding: 10px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <a href="index.html">
+             <img src="images/logo.png" alt="SUN CREATION" style="height:80px; width:auto; vertical-align:middle;">
+        </a>
+        
+        <a href="panier.html" class="nav-link-gold" style="font-size: 1.1rem; color: #333;">
+            PANIER <span class="cart-badge" style="background:#d4a373; color:white;">0</span>
+        </a>
+    </nav>
+
+    <div class="hero-fullscreen hero-home">
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+            <h1 class="hero-title">Sun Creation</h1>
+            <p style="font-size: 1.2rem; letter-spacing: 4px; text-transform: uppercase;">L'Art d'Offrir l'Exception</p>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">Notre Univers</h2>
+        </div>
+
+        <div class="grid-products">
+            <article class="product-card">
+                <div class="card-image"><img src="images/photo_femmes_bouquets.jpg" style="object-position: center 20%;"></div>
+                <div class="card-info">
+                    <h3>🌹 Bouquets</h3>
+                    <a href="roses.html" class="btn-discover">Configurer</a>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="card-image"><img src="images/box_choco_20.jpg"></div>
+                <div class="card-info">
+                    <h3>🍫 Box Gourmande</h3>
+                    <a href="boxes.html" class="btn-discover">Choisir</a>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="card-image"><img src="images/photo_lit_love.jpg" style="object-position: center 70%;"></div>
+                <div class="card-info">
+                    <h3>❤️ Love Box</h3>
+                    <a href="love.html" class="btn-discover">Voir</a>
+                </div>
+            </article>
+        </div>
+        
+        <footer style="text-align:center; padding:50px 0; color:#999; font-size:0.8rem;">
+            <p>&copy; 2026 Sun Creation</p>
+            <p><a href="mentions.html" style="text-decoration:underline;">Mentions Légales</a> | <a href="cgv.html" style="text-decoration:underline;">CGV</a></p>
+        </footer>
+    </div>
+    
+    <div class="mobile-nav">
+        <a href="roses.html" class="mobile-link"><span class="mobile-icon">🌹</span><span>Bouquets</span></a>
+        <a href="boxes.html" class="mobile-link"><span class="mobile-icon">🍫</span><span>Box</span></a>
+        <a href="love.html" class="mobile-link"><span class="mobile-icon">❤️</span><span>Love</span></a>
+        <a href="panier.html" class="mobile-link"><span class="mobile-icon">🛒</span><span>Panier</span></a>
+    </div>
+
+    <div id="toast">Message</div>
+    <script src="js/main.js"></script>
+</body>
+</html>

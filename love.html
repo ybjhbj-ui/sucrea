@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Box - Sun Creation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Menu transparent pour effet Wow */
+        nav { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(5px); border-bottom: none; box-shadow: none; }
+        .nav-link-gold { color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        nav a { color: white !important; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+    <div id="preloader"><div class="loader-content"><div class="loader-logo">SUN CREATION</div><div class="loader-line"></div></div></div>
+
+    <nav>
+        <a href="index.html" style="font-weight:bold;">SUN CREATION</a>
+        <a href="panier.html" class="nav-link-gold">PANIER <span class="cart-badge">0</span></a>
+    </nav>
+    
+    <div class="hero-fullscreen" style="background-image: url('images/photo_lit_love.jpg'); background-position: center 70%;">
+        <div class="hero-overlay"></div>
+        <div class="hero-text">
+            <h1 class="hero-title" style="font-size: 4rem; color:white;">Love Box</h1>
+            <p style="font-size: 1.2rem; letter-spacing: 3px; text-transform: uppercase; color:white;">Déclarez votre flamme</p>
+            <div style="margin-top:30px; font-size:2rem; animation: bounce 2s infinite; color:white;">⬇️</div>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        
+        <div class="shop-nav">
+            <a href="roses.html" class="shop-link">🌹 Bouquets</a>
+            <a href="boxes.html" class="shop-link">🍫 Box</a>
+            <a href="love.html" class="shop-link active">❤️ Love</a>
+        </div>
+
+        <div id="page-love"></div>
+
+        <footer style="text-align:center; padding-top:50px; color:#ccc; font-size:0.8rem;">
+            &copy; 2026 Sun Creation
+        </footer>
+    </div>
+
+    <div class="mobile-nav">
+        <a href="roses.html" class="mobile-link"><span class="mobile-icon">🌹</span><span>Bouquets</span></a>
+        <a href="boxes.html" class="mobile-link"><span class="mobile-icon">🍫</span><span>Box</span></a>
+        <a href="love.html" class="mobile-link active"><span class="mobile-icon">❤️</span><span>Love</span></a>
+        <a href="panier.html" class="mobile-link"><span class="mobile-icon">🛒</span><span>Panier</span></a>
+    </div>
+
+    <div id="toast">Message</div>
+    <script src="js/boutique.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
