@@ -124,6 +124,9 @@ function checkoutEmail() {
     const shipping = parseInt(delOpt.dataset.price);
     const mode = delOpt.value;
     
+    // GÉNÉRATION DU NUMÉRO DE COMMANDE
+    const orderId = 'CMD-' + Math.floor(1000 + Math.random() * 9000); // Ex: CMD-4821
+
     let detailsLivraison = "";
     let warningMsg = "";
 
@@ -151,7 +154,8 @@ function checkoutEmail() {
     cart.forEach(i => subtotal += i.price);
     const total = subtotal + shipping;
 
-    let body = `Bonjour Sun Creation,\n\nJe souhaite valider ma commande :\n\n`;
+    // Construction du mail avec le numéro de commande
+    let body = `Bonjour Sun Creation,\n\nJe souhaite valider ma commande n° ${orderId} :\n\n`;
     body += `👤 ${nom}\n📞 ${phone}\n`;
     if(insta) body += `📸 Insta: ${insta}\n`;
     body += `📍 ${detailsLivraison}${warningMsg}\n\n`;
@@ -164,8 +168,11 @@ function checkoutEmail() {
     
     body += `\n💰 TOTAL : ${total}€\n💳 ACOMPTE À VERSER (40%) : ${(total * 0.40).toFixed(2)}€\n\n`;
     body += `Merci de m'envoyer le RIB pour le virement !`;
+    
+    // Note sur la photo
+    body += `\n\n(Je vous enverrai la photo éventuelle en réponse à ce mail)`;
 
-    window.location.href = `mailto:Sncreat24@gmail.com?subject=COMMANDE SUN CREATION&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:Sncreat24@gmail.com?subject=COMMANDE ${orderId} - SUN CREATION&body=${encodeURIComponent(body)}`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
