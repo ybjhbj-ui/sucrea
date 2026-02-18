@@ -116,7 +116,13 @@ function renderRoses() {
                     <label class="opt-check"><input type="checkbox" id="opt-pap-${id}"> 🦋 Papillon (+2€)</label>
                     <label class="opt-check"><input type="checkbox" id="opt-noeud-${id}"> 🎀 Nœud Tulle (+3€)</label>
                     <label class="opt-check"><input type="checkbox" id="opt-noeud-luxe-${id}"> 🎀 Nœud Luxe (+5€)</label>
-                    <label class="opt-check"><input type="checkbox" id="opt-pique-${id}"> 🍫 Pique Ferrero (+1€)</label>
+                    
+                    <div style="margin-top:5px; margin-bottom:5px; padding:5px; background:#fff; border-radius:5px;">
+                        <label class="opt-label" style="display:inline-block; margin-top:0;">🍫 Pique Ferrero (1€/u) :</label>
+                        <input type="number" id="opt-pique-${id}" class="form-control" style="width:70px; display:inline-block; margin-left:10px;" min="0" max="20" value="0">
+                        <small style="color:#666; display:block; font-size:0.75rem;">(Max 20 unités)</small>
+                    </div>
+
                     <label class="opt-check"><input type="checkbox" id="opt-topper-${id}"> 🎂 Topper (Anniv/Cœur) (+2€)</label>
                     
                     <label class="opt-check"><input type="checkbox" id="opt-diam-few-${id}"> ✨ Diamants (Quelques roses) (+2€)</label>
@@ -181,11 +187,20 @@ function addBouquetToCart(qty, basePrice) {
     const pack = document.getElementById(`pack-${qty}`).value;
     if(pack.includes("Luxe")) finalPrice += 5;
 
-    // Accessoires (Code identique)
+    // Accessoires
     if(document.getElementById(`opt-pap-${qty}`).checked) { finalPrice += 2; opts.push("Papillon"); }
     if(document.getElementById(`opt-noeud-${qty}`).checked) { finalPrice += 3; opts.push("Nœud Tulle"); }
     if(document.getElementById(`opt-noeud-luxe-${qty}`).checked) { finalPrice += 5; opts.push("Nœud Luxe"); }
-    if(document.getElementById(`opt-pique-${qty}`).checked) { finalPrice += 1; opts.push("Pique Ferrero"); }
+    
+    // GESTION PIQUE FERRERO (Quantité)
+    const nbPique = parseInt(document.getElementById(`opt-pique-${qty}`).value) || 0;
+    if(nbPique > 0) {
+        // Sécurité Max 20
+        const validQty = Math.min(nbPique, 20);
+        finalPrice += (validQty * 1); // 1€ par unité
+        opts.push(`Pique Ferrero (x${validQty})`);
+    }
+
     if(document.getElementById(`opt-topper-${qty}`).checked) { finalPrice += 2; opts.push("Topper"); }
     if(document.getElementById(`opt-diam-few-${qty}`).checked) { finalPrice += 2; opts.push("Diamants (Qq)"); }
     if(document.getElementById(`opt-diam-all-${qty}`).checked) { finalPrice += 4; opts.push("Diamants (Tout)"); }
