@@ -9,7 +9,7 @@ const LISTE_BOUQUETS = [
     { qty: 70, prix: 90 }, { qty: 100, prix: 120 }
 ];
 
-// COULEURS SANS EMOJIS (Comme demandé précédemment)
+// COULEURS SANS EMOJIS
 const COULEURS_ROSES = ["Rouge", "Blanc", "Noir", "Rose", "Violet", "Bleu Clair", "Bleu Foncé"];
 const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno"];
 
@@ -115,6 +115,23 @@ function renderRoses() {
     const container = document.getElementById('page-roses');
     if (!container) return;
 
+    // Style spécifique pour la grille d'emballage
+    const styleImages = document.createElement('style');
+    styleImages.innerHTML = `
+        .pack-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .pack-item { text-align: center; font-size: 0.75rem; color: #555; }
+        .pack-item img { 
+            width: 100%; 
+            height: 60px; 
+            object-fit: cover; 
+            border-radius: 8px; 
+            border: 1px solid #d4a373; 
+            margin-bottom: 3px;
+            background: #f5f5f5;
+        }
+    `;
+    document.head.appendChild(styleImages);
+
     container.innerHTML = LISTE_BOUQUETS.map(bq => {
         const id = bq.qty;
         return `
@@ -131,21 +148,22 @@ function renderRoses() {
                     ${COULEURS_ROSES.map(c => `<option value="${c}">${c}</option>`).join('')}
                 </select>
 
-                <label class="opt-label">Style d'emballage :</label>
-                <div style="display:flex; justify-content:space-between; margin-bottom:5px; gap:5px;">
-                    <div style="text-align:center; font-size:0.7rem; color:#666;">
-                        <img src="images/ref_standard.jpg" style="width:100%; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;" onerror="this.style.display='none'">
+                <label class="opt-label">Style d'emballage (Aperçu) :</label>
+                <div class="pack-grid">
+                    <div class="pack-item">
+                        <img src="images/ref_standard.jpg" onerror="this.style.display='none'">
                         Standard
                     </div>
-                    <div style="text-align:center; font-size:0.7rem; color:#666;">
-                        <img src="images/ref_bordure.jpg" style="width:100%; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;" onerror="this.style.display='none'">
+                    <div class="pack-item">
+                        <img src="images/ref_bordure.jpg" onerror="this.style.display='none'">
                         Bordure
                     </div>
-                    <div style="text-align:center; font-size:0.7rem; color:#666;">
-                        <img src="images/ref_luxe.jpg" style="width:100%; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;" onerror="this.style.display='none'">
+                    <div class="pack-item">
+                        <img src="images/ref_luxe.jpg" onerror="this.style.display='none'">
                         Luxe
                     </div>
                 </div>
+                
                 <select id="pack-${id}" class="form-control mb-10">${getEmballageOptions()}</select>
 
                 <div class="options-box">
@@ -164,7 +182,7 @@ function renderRoses() {
                         <option value="Love">❤️ Love</option>
                     </select>
 
-                    <div style="margin-top:5px; margin-bottom:5px; padding:5px; background:#fff; border-radius:5px;">
+                    <div style="margin-top:5px; margin-bottom:5px; padding:5px; background:#fff; border-radius:5px; border:1px solid #eee;">
                         <label class="opt-label" style="display:inline-block; margin-top:0;">🍫 Pique Ferrero (1€/u) :</label>
                         <input type="number" id="opt-pique-${id}" class="form-control" 
                                style="width:70px; display:inline-block; margin-left:10px;" 
@@ -235,7 +253,7 @@ function addBouquetToCart(qty, basePrice) {
     const pack = document.getElementById(`pack-${qty}`).value;
     if(pack.includes("Luxe")) finalPrice += 5;
 
-    // Accessoires Checkbox
+    // Accessoires (Papillon)
     if(document.getElementById(`opt-pap-${qty}`).checked) { finalPrice += 2; opts.push("Papillon"); }
 
     // GESTION NOEUDS (RUBAN)
