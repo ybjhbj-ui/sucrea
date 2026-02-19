@@ -7,6 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* FOND DE PAGE LÉGÈREMENT GRIS POUR FAIRE RESSORTIR LES BLOCS BLANCS */
+        body {
+            background-color: #fdfbf7; /* Crème très très clair */
+        }
+
         .cart-container {
             display: flex;
             flex-wrap: wrap;
@@ -15,17 +20,34 @@
             padding: 20px;
             gap: 30px;
         }
-        .cart-items { flex: 2; min-width: 300px; }
+
+        /* BLOC GAUCHE : LISTE DES PRODUITS */
+        .cart-items { 
+            flex: 2; 
+            min-width: 300px;
+            /* NOUVEAU DESIGN : Cadre blanc + Ombre */
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        /* BLOC DROITE : RÉCAPITULATIF */
         .cart-summary {
             flex: 1;
             min-width: 300px;
-            background: #f9f9f9;
-            padding: 25px;
-            border-radius: 10px;
-            border: 1px solid #eee;
+            /* Design harmonisé */
+            background: white; 
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #eee; /* Bordure dorée très fine pour le style */
             align-self: flex-start;
         }
-        h2, h3 { font-family: 'Playfair Display', serif; }
+
+        h2, h3 { font-family: 'Playfair Display', serif; margin-top: 0; color: #111; }
+        
         .btn-checkout {
             background-color: #111;
             color: #d4a373;
@@ -37,12 +59,25 @@
             cursor: pointer;
             margin-top: 20px;
             border-radius: 5px;
+            transition: 0.3s;
         }
-        .btn-checkout:hover { background-color: #333; }
+        .btn-checkout:hover { background-color: #333; transform: translateY(-2px); }
+        
         .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 1.1rem; }
-        .total-big { font-weight: bold; font-size: 1.4rem; color: #111; margin-top: 20px; border-top: 2px solid #ddd; padding-top: 15px; }
-        .form-control { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-family: 'Montserrat', sans-serif; }
-        .radio-label { display: block; margin-bottom: 10px; cursor: pointer; }
+        .total-big { font-weight: bold; font-size: 1.4rem; color: #111; margin-top: 20px; border-top: 2px solid #f4f4f4; padding-top: 15px; }
+        
+        .form-control { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Montserrat', sans-serif; background: #fafafa; }
+        .form-control:focus { outline: none; border-color: #d4a373; background: white; }
+        
+        .radio-label { display: block; margin-bottom: 12px; cursor: pointer; font-size: 0.95rem; }
+        
+        /* Style spécifique pour les articles dans la liste (géré par JS mais stylisé ici) */
+        .cart-item-row {
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .cart-item-row:last-child { border-bottom: none; }
     </style>
 </head>
 <body>
@@ -59,14 +94,15 @@
     <div class="cart-container">
         
         <div class="cart-items">
-            <h2>Votre Panier</h2>
+            <h2 style="border-bottom: 2px solid #d4a373; padding-bottom: 10px; display:inline-block; margin-bottom: 20px;">Votre Panier</h2>
             <div id="cart-items-container">
                 </div>
-            <a href="index.html" style="display:inline-block; margin-top:20px; color:#d4a373; text-decoration:none;">← Continuer mes achats</a>
+            <a href="index.html" style="display:inline-block; margin-top:20px; color:#d4a373; text-decoration:none; font-weight:bold;">← Continuer mes achats</a>
         </div>
 
         <div class="cart-summary">
-            <h3>Validation de la commande</h3>
+            <h3>Validation</h3>
+            <p style="color:#666; font-size:0.9rem; margin-bottom:20px;">Remplissez vos infos pour finaliser.</p>
             
             <label>Nom complet :</label>
             <input type="text" id="client-name" class="form-control" placeholder="Votre Nom">
@@ -77,36 +113,36 @@
             <label>Instagram (Facultatif) :</label>
             <input type="text" id="client-insta" class="form-control" placeholder="@pseudo">
 
-            <h4 style="margin-top:20px;">Mode de livraison</h4>
+            <h4 style="margin-top:20px; color:#d4a373;">Livraison</h4>
             
             <label class="radio-label">
                 <input type="radio" name="delivery" value="retrait" data-price="0" checked onchange="updateTotal()">
-                Retrait Atelier (Gonesse 95) - Gratuit
+                🏠 Retrait Atelier (Gonesse 95) - Gratuit
             </label>
 
             <label class="radio-label">
                 <input type="radio" name="delivery" value="uber" data-price="0" onchange="updateTotal()">
-                Livraison Uber (À vos frais)
+                🚗 Livraison Uber (À vos frais)
             </label>
 
             <label class="radio-label">
                 <input type="radio" name="delivery" value="france" data-price="15" onchange="updateTotal()">
-                Envoi Colissimo France (+15€)
+                📦 Envoi Colissimo France (+15€)
             </label>
 
             <label class="radio-label">
                 <input type="radio" name="delivery" value="europe" data-price="25" onchange="updateTotal()">
-                Envoi Europe (+25€)
+                🌍 Envoi Europe (+25€)
             </label>
 
-            <div id="bloc-date" style="margin-top:15px;">
+            <div id="bloc-date" style="margin-top:15px; background:#fdfbf7; padding:10px; border-radius:5px;">
                 <label>Date souhaitée (Min J+7) :</label>
-                <input type="date" id="retrait-date" class="form-control">
+                <input type="date" id="retrait-date" class="form-control" style="margin-bottom:5px;">
                 <label>Heure :</label>
                 <input type="time" id="retrait-time" class="form-control">
             </div>
 
-            <div id="bloc-adresse" style="margin-top:15px; display:none;">
+            <div id="bloc-adresse" style="margin-top:15px; display:none; background:#fdfbf7; padding:10px; border-radius:5px;">
                 <label>Adresse complète :</label>
                 <input type="text" id="livraison-adresse" class="form-control" placeholder="Rue, Code Postal, Ville">
                 <label>Ville / Pays :</label>
@@ -114,7 +150,7 @@
             </div>
 
             <div style="margin-top:20px;">
-                <label>Message pour Sun Creation (Facultatif) :</label>
+                <label>Message / Précision :</label>
                 <textarea id="client-msg" class="form-control" rows="3" placeholder="Une précision ? Une réclamation ? Un petit mot ?"></textarea>
             </div>
 
@@ -131,9 +167,9 @@
                 <span id="cart-total">0</span> €
             </div>
             
-            <p style="text-align:center; color:#d4af37; font-weight:bold; margin-top:10px;">
-                Acompte à régler (40%) : <span id="cart-acompte">0</span> €
-            </p>
+            <div style="background: #fff3cd; padding: 10px; border-radius: 5px; text-align: center; margin-top: 15px; color: #856404; font-size: 0.9rem;">
+                Acompte à régler (40%) : <strong><span id="cart-acompte">0</span> €</strong>
+            </div>
 
             <button class="btn-checkout" onclick="checkoutEmail()">VALIDER LA COMMANDE</button>
         </div>
@@ -142,5 +178,32 @@
     <div id="toast">Ajouté au panier !</div>
 
     <script src="js/main.js"></script>
+    
+    <script>
+    // On surcharge légèrement la fonction renderCartPage de main.js via CSS
+    // Pas besoin de toucher main.js, le CSS ici suffit à changer l'aspect des items
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+        /* On cible les divs créées par le JS */
+        #cart-items-container > div {
+            background: #fff;
+            border: none !important; /* On enlève la bordure simple du JS */
+            border-bottom: 1px solid #eee !important;
+            padding: 20px 0 !important;
+            transition: 0.3s;
+        }
+        #cart-items-container > div:last-child {
+            border-bottom: none !important;
+        }
+        /* Image plus grande */
+        #cart-items-container img {
+            width: 80px !important; 
+            height: 80px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    `;
+    document.head.appendChild(styleSheet);
+    </script>
 </body>
 </html>
