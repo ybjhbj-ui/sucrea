@@ -33,6 +33,31 @@ const LISTE_BOXES = [
     }
 ];
 
+// FONCTION POUR LE ZOOM IMAGE (Lightbox)
+window.zoomImage = function(src) {
+    // Créer le visualiseur si pas encore là
+    if (!document.getElementById('image-viewer')) {
+        const viewer = document.createElement('div');
+        viewer.id = 'image-viewer';
+        viewer.innerHTML = `<span style="position:absolute; top:20px; right:20px; color:white; font-size:30px; cursor:pointer;">&times;</span><img id="full-image" src="">`;
+        viewer.style.cssText = "display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.9); align-items:center; justify-content:center;";
+        
+        // Fermer au clic
+        viewer.onclick = function() { viewer.style.display = 'none'; };
+        
+        document.body.appendChild(viewer);
+    }
+    
+    const viewer = document.getElementById('image-viewer');
+    const fullImg = document.getElementById('full-image');
+    
+    fullImg.src = src;
+    fullImg.style.cssText = "margin: auto; display: block; max-width: 90%; max-height: 90%; border-radius: 5px; box-shadow: 0 0 20px rgba(255,255,255,0.2);";
+    
+    // Utiliser flex pour centrer parfaitement
+    viewer.style.display = 'flex';
+}
+
 // Liste complète Emballages
 function getEmballageOptions() {
     return `
@@ -116,18 +141,28 @@ function renderRoses() {
     if (!container) return;
 
     // Style spécifique pour la grille d'emballage
+    // J'ai augmenté la hauteur à 100px pour qu'on voie mieux
     const styleImages = document.createElement('style');
     styleImages.innerHTML = `
-        .pack-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .pack-item { text-align: center; font-size: 0.75rem; color: #555; }
+        .pack-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 5px; }
+        .pack-item { text-align: center; font-size: 0.75rem; color: #555; position: relative; }
         .pack-item img { 
             width: 100%; 
-            height: 60px; 
+            height: 90px; /* BEAUCOUP PLUS GRAND */
             object-fit: cover; 
             border-radius: 8px; 
             border: 1px solid #d4a373; 
             margin-bottom: 3px;
             background: #f5f5f5;
+            cursor: pointer; /* Indique qu'on peut cliquer */
+            transition: transform 0.2s;
+        }
+        .pack-item img:active { transform: scale(0.95); }
+        .zoom-icon {
+            position: absolute; bottom: 25px; right: 5px; 
+            background: rgba(0,0,0,0.6); color: white; 
+            border-radius: 50%; width: 20px; height: 20px; 
+            font-size: 12px; line-height: 20px; pointer-events: none;
         }
     `;
     document.head.appendChild(styleImages);
@@ -148,18 +183,21 @@ function renderRoses() {
                     ${COULEURS_ROSES.map(c => `<option value="${c}">${c}</option>`).join('')}
                 </select>
 
-                <label class="opt-label">Style d'emballage (Aperçu) :</label>
+                <label class="opt-label">Style d'emballage (Cliquez pour agrandir 🔍) :</label>
                 <div class="pack-grid">
-                    <div class="pack-item">
+                    <div class="pack-item" onclick="zoomImage('images/ref_standard.jpg')">
                         <img src="images/ref_standard.jpg" onerror="this.style.display='none'">
+                        <div class="zoom-icon">🔍</div>
                         Standard
                     </div>
-                    <div class="pack-item">
+                    <div class="pack-item" onclick="zoomImage('images/ref_bordure.jpg')">
                         <img src="images/ref_bordure.jpg" onerror="this.style.display='none'">
+                        <div class="zoom-icon">🔍</div>
                         Bordure
                     </div>
-                    <div class="pack-item">
+                    <div class="pack-item" onclick="zoomImage('images/ref_luxe.jpg')">
                         <img src="images/ref_luxe.jpg" onerror="this.style.display='none'">
+                        <div class="zoom-icon">🔍</div>
                         Luxe
                     </div>
                 </div>
