@@ -9,7 +9,8 @@ const LISTE_BOUQUETS = [
     { qty: 70, prix: 90 }, { qty: 100, prix: 120 }
 ];
 
-const COULEURS_ROSES = ["Rouge ", "Blanc ", "Noir ", "Rose ", "Violet ", "Bleu Clair ", "Bleu Foncé "];
+// COULEURS SANS EMOJIS (Comme demandé précédemment)
+const COULEURS_ROSES = ["Rouge", "Blanc", "Noir", "Rose", "Violet", "Bleu Clair", "Bleu Foncé"];
 const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno"];
 
 // PRIX ET CONFIGURATION DES BOXES GOURMANDES
@@ -87,6 +88,28 @@ function getEmballageOptions() {
     `;
 }
 
+// LISTE DES RUBANS (NOEUDS)
+function getRubanOptions() {
+    return `
+    <option value="">-- Sans Nœud --</option>
+    <option value="Tulle Rouge">🎀 Tulle Rouge (+3€)</option>
+    
+    <optgroup label="--- LUXE DIOR (+5€) ---">
+        <option value="Dior Noir">Dior Noir</option>
+        <option value="Dior Blanc">Dior Blanc</option>
+        <option value="Dior Beige">Dior Beige</option>
+        <option value="Dior Rouge">Dior Rouge</option>
+        <option value="Dior Rose">Dior Rose</option>
+    </optgroup>
+    
+    <optgroup label="--- LUXE GUCCI (+5€) ---">
+        <option value="Gucci Noir">Gucci Noir</option>
+        <option value="Gucci Kaki">Gucci Kaki</option>
+        <option value="Gucci Rouge">Gucci Rouge</option>
+    </optgroup>
+    `;
+}
+
 // --- 1. BOUQUETS ---
 function renderRoses() {
     const container = document.getElementById('page-roses');
@@ -108,15 +131,39 @@ function renderRoses() {
                     ${COULEURS_ROSES.map(c => `<option value="${c}">${c}</option>`).join('')}
                 </select>
 
-                <label class="opt-label">Emballage :</label>
+                <label class="opt-label">Style d'emballage :</label>
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; gap:5px;">
+                    <div style="text-align:center; font-size:0.7rem; color:#666;">
+                        <img src="images/ref_standard.jpg" style="width:100%; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;" onerror="this.style.display='none'">
+                        Standard
+                    </div>
+                    <div style="text-align:center; font-size:0.7rem; color:#666;">
+                        <img src="images/ref_bordure.jpg" style="width:100%; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;" onerror="this.style.display='none'">
+                        Bordure
+                    </div>
+                    <div style="text-align:center; font-size:0.7rem; color:#666;">
+                        <img src="images/ref_luxe.jpg" style="width:100%; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ddd;" onerror="this.style.display='none'">
+                        Luxe
+                    </div>
+                </div>
                 <select id="pack-${id}" class="form-control mb-10">${getEmballageOptions()}</select>
 
                 <div class="options-box">
                     <strong>Accessoires :</strong>
                     <label class="opt-check"><input type="checkbox" id="opt-pap-${id}"> 🦋 Papillon (+2€)</label>
-                    <label class="opt-check"><input type="checkbox" id="opt-noeud-${id}"> 🎀 Nœud Tulle (+3€)</label>
-                    <label class="opt-check"><input type="checkbox" id="opt-noeud-luxe-${id}"> 🎀 Nœud Luxe (+5€)</label>
                     
+                    <label class="opt-label" style="margin-top:10px;">Choix du Nœud :</label>
+                    <select id="opt-ruban-select-${id}" class="form-control mb-10">
+                        ${getRubanOptions()}
+                    </select>
+
+                    <label class="opt-label" style="margin-top:5px;">Topper (+2€) :</label>
+                    <select id="opt-topper-select-${id}" class="form-control mb-10">
+                        <option value="">-- Aucun --</option>
+                        <option value="Anniversaire">🎂 Joyeux Anniversaire</option>
+                        <option value="Love">❤️ Love</option>
+                    </select>
+
                     <div style="margin-top:5px; margin-bottom:5px; padding:5px; background:#fff; border-radius:5px;">
                         <label class="opt-label" style="display:inline-block; margin-top:0;">🍫 Pique Ferrero (1€/u) :</label>
                         <input type="number" id="opt-pique-${id}" class="form-control" 
@@ -125,8 +172,6 @@ function renderRoses() {
                                oninput="if(this.value > 20){ alert('Maximum 20 Ferreros !'); this.value = 20; }">
                         <small style="color:#666; display:block; font-size:0.75rem;">(Max 20 unités)</small>
                     </div>
-
-                    <label class="opt-check"><input type="checkbox" id="opt-topper-${id}"> 🎂 Topper (Anniv/Cœur) (+2€)</label>
                     
                     <label class="opt-check"><input type="checkbox" id="opt-diam-few-${id}"> ✨ Diamants (Quelques roses) (+2€)</label>
                     <label class="opt-check"><input type="checkbox" id="opt-diam-all-${id}"> 💎 Diamants (Toutes les roses) (+4€)</label>
@@ -190,21 +235,35 @@ function addBouquetToCart(qty, basePrice) {
     const pack = document.getElementById(`pack-${qty}`).value;
     if(pack.includes("Luxe")) finalPrice += 5;
 
-    // Accessoires
+    // Accessoires Checkbox
     if(document.getElementById(`opt-pap-${qty}`).checked) { finalPrice += 2; opts.push("Papillon"); }
-    if(document.getElementById(`opt-noeud-${qty}`).checked) { finalPrice += 3; opts.push("Nœud Tulle"); }
-    if(document.getElementById(`opt-noeud-luxe-${qty}`).checked) { finalPrice += 5; opts.push("Nœud Luxe"); }
+
+    // GESTION NOEUDS (RUBAN)
+    const ruban = document.getElementById(`opt-ruban-select-${qty}`).value;
+    if(ruban) {
+        if(ruban.includes("Tulle")) {
+            finalPrice += 3; // Tulle Rouge
+        } else {
+            finalPrice += 5; // Dior ou Gucci
+        }
+        opts.push(`Nœud: ${ruban}`);
+    }
+
+    // GESTION TOPPER
+    const topper = document.getElementById(`opt-topper-select-${qty}`).value;
+    if(topper) {
+        finalPrice += 2;
+        opts.push(`Topper: ${topper}`);
+    }
     
     // GESTION PIQUE FERRERO (Quantité)
     const nbPique = parseInt(document.getElementById(`opt-pique-${qty}`).value) || 0;
     if(nbPique > 0) {
-        // Sécurité Max 20 côté JS
         const validQty = Math.min(nbPique, 20);
         finalPrice += (validQty * 1); // 1€ par unité
         opts.push(`Pique Ferrero (x${validQty})`);
     }
 
-    if(document.getElementById(`opt-topper-${qty}`).checked) { finalPrice += 2; opts.push("Topper"); }
     if(document.getElementById(`opt-diam-few-${qty}`).checked) { finalPrice += 2; opts.push("Diamants (Qq)"); }
     if(document.getElementById(`opt-diam-all-${qty}`).checked) { finalPrice += 4; opts.push("Diamants (Tout)"); }
     if(document.getElementById(`opt-pail-${qty}`).checked) { opts.push("Paillettes"); }
