@@ -10,7 +10,7 @@ const LISTE_BOUQUETS = [
 ];
 
 // COULEURS SANS EMOJIS
-const COULEURS_ROSES = ["Rouge", "Blanc", "Noir", "Rose", "Violet", "Bleu Clair", "Bleu Foncé"];
+const COULEURS_ROSES = ["Rouge", "Blanc", "Noir", "Rose", "Violet", "Bleu Clair", "Bleu Foncé", "rose pale", "jaune", "beige"];
 const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno"];
 
 // PRIX ET CONFIGURATION DES BOXES GOURMANDES
