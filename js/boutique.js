@@ -9,7 +9,7 @@ const LISTE_BOUQUETS = [
     { qty: 70, prix: 90 }, { qty: 100, prix: 120 }
 ];
 
-const COULEURS_ROSES = ["Rouge ❤️", "Blanc 🤍", "Noir 🖤", "Rose 🌸", "Violet 💜", "Bleu Clair ❄️", "Bleu Foncé 🔵"];
+const COULEURS_ROSES = ["Rouge ", "Blanc ", "Noir ", "Rose ", "Violet ", "Bleu Clair ", "Bleu Foncé "];
 const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno"];
 
 // PRIX ET CONFIGURATION DES BOXES GOURMANDES
