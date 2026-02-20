@@ -356,7 +356,7 @@ function addBouquetToCart(qty, basePrice) {
     });
 }
 
-// --- 2. BOXES (CHOCOLATS MULTIPLES + DOUDOU 7.50€ + TOPPER MENU) ---
+// --- 2. BOXES (CHOCOLATS MULTIPLES + DOUDOU 7.50€ + TOPPER MENU + CARTE) ---
 function renderBoxes() {
     const container = document.getElementById('page-boxes');
     if (!container) return;
@@ -420,6 +420,11 @@ function renderBoxes() {
                         <option value="Long">Texte Long (+15€)</option>
                     </select>
                     <div id="box-bande-wrapper-${box.id}" class="hidden"><input type="text" id="box-bande-${box.id}" class="form-control" placeholder="Texte sur ruban..."></div>
+                    
+                    <label class="opt-check mt-2" style="font-weight:bold;">
+                        <input type="checkbox" id="box-carte-${box.id}" onchange="toggleCheck('box-carte-${box.id}', 'box-carte-wrapper-${box.id}')"> 💌 Carte Personnalisée (+5€)
+                    </label>
+                    <div id="box-carte-wrapper-${box.id}" class="hidden"><input type="text" id="box-carte-text-${box.id}" class="form-control" placeholder="Message carte..."></div>
                 </div>
 
                 <button class="btn-discover" style="width:100%;" onclick="addBoxToCart('${box.id}', '${box.title}', ${box.priceFleur}, ${box.priceChoco})">Ajouter</button>
@@ -481,10 +486,16 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
         details.push(`Bande: "${document.getElementById(`box-bande-${id}`).value}"`);
     }
 
+    // AJOUT DE LA CARTE AU PRIX ET AUX DÉTAILS
+    if(document.getElementById(`box-carte-${id}`).checked) {
+        finalPrice += 5;
+        details.push(`Carte: "${document.getElementById(`box-carte-text-${id}`).value}"`);
+    }
+
     addToCart({ title, price: finalPrice, image: `images/${id === 'box30' ? 'box_choco_30.jpg' : 'box_choco_20.jpg'}`, desc: details.join(' | ') });
 }
 
-// --- 3. LOVE BOX (BASE 55€ + 5€ par lettre choco) ---
+// --- 3. LOVE BOX (BASE 55€ + 5€ par lettre choco + CARTE) ---
 function renderLove() {
     const container = document.getElementById('page-love');
     if (!container) return;
@@ -530,6 +541,14 @@ function renderLove() {
                     <label class="opt-check"><input type="checkbox" id="love-led"> 💡 LED (+5€)</label>
                     <label class="opt-check"><input type="checkbox" id="love-pail"> ✨ Paillettes (Offert)</label>
                 </div>
+                
+                <div class="perso-box">
+                    <strong style="display:block; margin-bottom:5px;">Personnalisation :</strong>
+                    <label class="opt-check mt-2">
+                        <input type="checkbox" id="love-carte" onchange="toggleCheck('love-carte', 'love-carte-wrapper')"> 💌 Carte Personnalisée (+5€)
+                    </label>
+                    <div id="love-carte-wrapper" class="hidden"><input type="text" id="love-carte-text" class="form-control" placeholder="Message carte..."></div>
+                </div>
 
                 <button class="btn-discover" style="width:100%;" onclick="addLoveToCart()">Ajouter au Panier</button>
             </div>
@@ -572,6 +591,12 @@ function addLoveToCart() {
     if(document.getElementById('love-doudou').checked) { price += 3; opts.push("Doudou"); }
     if(document.getElementById('love-led').checked) { price += 5; opts.push("LED"); }
     if(document.getElementById('love-pail').checked) { opts.push("Paillettes"); }
+
+    // AJOUT DE LA CARTE AU PRIX ET AUX DÉTAILS
+    if(document.getElementById('love-carte').checked) {
+        price += 5;
+        opts.push(`Carte: "${document.getElementById('love-carte-text').value}"`);
+    }
 
     addToCart({ title: "Love Box I ❤️ U", price: price, image: "images/photo_lit_love.jpg", desc: opts.join(' | ') });
 }
