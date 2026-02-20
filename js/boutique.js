@@ -10,7 +10,7 @@ const LISTE_BOUQUETS = [
 ];
 
 // COULEURS SANS EMOJIS
-const COULEURS_ROSES = ["Rouge", "Blanc", "Noir", "Rose", "Violet", "Bleu Clair", "Bleu Foncé", "rose pale", "jaune", "beige"];
+const COULEURS_ROSES = ["Rouge", "Blanc", "Noir", "Rose", "Violet", "Bleu Clair", "Bleu Foncé"];
 const CHOCOLATS = ["Ferrero Rocher", "Raffaello", "Kinder Schoko-Bons", "Kinder Bueno"];
 
 // PRIX ET CONFIGURATION DES BOXES GOURMANDES
@@ -35,16 +35,13 @@ const LISTE_BOXES = [
 
 // FONCTION POUR LE ZOOM IMAGE (Lightbox)
 window.zoomImage = function(src) {
-    // Créer le visualiseur si pas encore là
     if (!document.getElementById('image-viewer')) {
         const viewer = document.createElement('div');
         viewer.id = 'image-viewer';
         viewer.innerHTML = `<span style="position:absolute; top:20px; right:20px; color:white; font-size:30px; cursor:pointer;">&times;</span><img id="full-image" src="">`;
         viewer.style.cssText = "display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.9); align-items:center; justify-content:center;";
         
-        // Fermer au clic
         viewer.onclick = function() { viewer.style.display = 'none'; };
-        
         document.body.appendChild(viewer);
     }
     
@@ -54,7 +51,6 @@ window.zoomImage = function(src) {
     fullImg.src = src;
     fullImg.style.cssText = "margin: auto; display: block; max-width: 90%; max-height: 90%; border-radius: 5px; box-shadow: 0 0 20px rgba(255,255,255,0.2);";
     
-    // Utiliser flex pour centrer parfaitement
     viewer.style.display = 'flex';
 }
 
@@ -140,21 +136,19 @@ function renderRoses() {
     const container = document.getElementById('page-roses');
     if (!container) return;
 
-    // Style spécifique pour la grille d'emballage
-    // J'ai augmenté la hauteur à 100px pour qu'on voie mieux
     const styleImages = document.createElement('style');
     styleImages.innerHTML = `
         .pack-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 5px; }
         .pack-item { text-align: center; font-size: 0.75rem; color: #555; position: relative; }
         .pack-item img { 
             width: 100%; 
-            height: 90px; /* BEAUCOUP PLUS GRAND */
+            height: 90px; 
             object-fit: cover; 
             border-radius: 8px; 
             border: 1px solid #d4a373; 
             margin-bottom: 3px;
             background: #f5f5f5;
-            cursor: pointer; /* Indique qu'on peut cliquer */
+            cursor: pointer; 
             transition: transform 0.2s;
         }
         .pack-item img:active { transform: scale(0.95); }
@@ -291,32 +285,28 @@ function addBouquetToCart(qty, basePrice) {
     const pack = document.getElementById(`pack-${qty}`).value;
     if(pack.includes("Luxe")) finalPrice += 5;
 
-    // Accessoires (Papillon)
     if(document.getElementById(`opt-pap-${qty}`).checked) { finalPrice += 2; opts.push("Papillon"); }
 
-    // GESTION NOEUDS (RUBAN)
     const ruban = document.getElementById(`opt-ruban-select-${qty}`).value;
     if(ruban) {
         if(ruban.includes("Tulle")) {
-            finalPrice += 3; // Tulle Rouge
+            finalPrice += 3; 
         } else {
-            finalPrice += 5; // Dior ou Gucci
+            finalPrice += 5; 
         }
         opts.push(`Nœud: ${ruban}`);
     }
 
-    // GESTION TOPPER
     const topper = document.getElementById(`opt-topper-select-${qty}`).value;
     if(topper) {
         finalPrice += 2;
         opts.push(`Topper: ${topper}`);
     }
     
-    // GESTION PIQUE FERRERO (Quantité)
     const nbPique = parseInt(document.getElementById(`opt-pique-${qty}`).value) || 0;
     if(nbPique > 0) {
         const validQty = Math.min(nbPique, 20);
-        finalPrice += (validQty * 1); // 1€ par unité
+        finalPrice += (validQty * 1); 
         opts.push(`Pique Ferrero (x${validQty})`);
     }
 
@@ -436,31 +426,6 @@ function renderBoxes() {
             </div>
         </div>`).join('');
 }
-                </div>
-
-                <div class="options-box">
-                    <label class="opt-label mt-2">Doudous :</label>
-                    <select id="box-doudou-${box.id}" class="form-control">
-                        <option value="0">Aucun</option>
-                        <option value="${box.doudouPrice}">🧸 2 Doudous (+${box.doudouPrice.toFixed(2)}€)</option>
-                    </select>
-
-                    <label class="opt-label mt-2">Accessoires :</label>
-                    <label class="opt-check"><input type="checkbox" id="box-topper-${box.id}"> 🎂 Topper (+2€)</label>
-                    
-                    <label class="opt-label mt-2">Bande Personnalisée :</label>
-                    <select id="box-bande-type-${box.id}" class="form-control" onchange="toggleSelect('box-bande-type-${box.id}', 'box-bande-wrapper-${box.id}')">
-                        <option value="">Aucune</option>
-                        <option value="Simple">Texte Court (+12€)</option>
-                        <option value="Long">Texte Long (+15€)</option>
-                    </select>
-                    <div id="box-bande-wrapper-${box.id}" class="hidden"><input type="text" id="box-bande-${box.id}" class="form-control" placeholder="Texte sur ruban..."></div>
-                </div>
-
-                <button class="btn-discover" style="width:100%;" onclick="addBoxToCart('${box.id}', '${box.title}', ${box.priceFleur}, ${box.priceChoco})">Ajouter</button>
-            </div>
-        </div>`).join('');
-}
 
 window.toggleBoxOptions = function(id, priceFleur, priceChoco) {
     const style = document.getElementById(`box-style-${id}`).value;
@@ -488,24 +453,22 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
     const chocoString = checkedChocos.length > 0 ? checkedChocos.join(', ') : "Surprise (Mix)";
     details.push(`Chocos: ${chocoString}`);
 
-    // Options si mode Fleurs
     if(style === 'Fleurs') {
         details.push(`Fleurs: ${document.getElementById(`box-fleur-${id}`).value}`);
         const init = document.getElementById(`box-init-${id}`).value;
         if (init) {
-            finalPrice += 5; // Initiale passée à 5€
+            finalPrice += 5; 
             details.push(`Initiale ${init}: ${document.getElementById(`box-letter-${id}`).value}`);
         }
     }
 
-    // GESTION NOUVEAU TOPPER MENU DEROULANT
+    // GESTION NOUVEAU TOPPER MENU DEROULANT (BOX)
     const topper = document.getElementById(`box-topper-select-${id}`).value;
     if(topper) {
         finalPrice += 2;
         details.push(`Topper: ${topper}`);
     }
 
-    // DOUDOU CORRIGÉ
     const doudouVal = parseFloat(document.getElementById(`box-doudou-${id}`).value);
     if(doudouVal > 0) { 
         finalPrice += doudouVal; 
@@ -520,6 +483,7 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
 
     addToCart({ title, price: finalPrice, image: `images/${id === 'box30' ? 'box_choco_30.jpg' : 'box_choco_20.jpg'}`, desc: details.join(' | ') });
 }
+
 // --- 3. LOVE BOX (BASE 55€ + 5€ par lettre choco) ---
 function renderLove() {
     const container = document.getElementById('page-love');
@@ -597,7 +561,7 @@ function addLoveToCart() {
             val = document.getElementById(`love-${prefix}-color`).value;
         } else {
             val = document.getElementById(`love-${prefix}-gout`).value;
-            price += 5; // AJOUTE 5€ PAR LETTRE CHOCOLAT
+            price += 5; 
         }
         const label = prefix === 'heart' ? '❤️' : prefix.toUpperCase();
         opts.push(`${label}: ${type} (${val})`);
