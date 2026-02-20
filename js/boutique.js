@@ -366,7 +366,7 @@ function addBouquetToCart(qty, basePrice) {
     });
 }
 
-// --- 2. BOXES (CHOCOLATS MULTIPLES + DOUDOU 7.50€) ---
+// --- 2. BOXES (CHOCOLATS MULTIPLES + DOUDOU 7.50€ + TOPPER MENU) ---
 function renderBoxes() {
     const container = document.getElementById('page-boxes');
     if (!container) return;
@@ -407,6 +407,35 @@ function renderBoxes() {
                             <input type="checkbox" name="choco-check-${box.id}" value="${c}"> ${c}
                         </label>
                     `).join('')}
+                </div>
+
+                <div class="options-box">
+                    <label class="opt-label mt-2">Doudous :</label>
+                    <select id="box-doudou-${box.id}" class="form-control">
+                        <option value="0">Aucun</option>
+                        <option value="${box.doudouPrice}">🧸 2 Doudous (+${box.doudouPrice.toFixed(2)}€)</option>
+                    </select>
+
+                    <label class="opt-label" style="margin-top:10px;">Topper (+2€) :</label>
+                    <select id="box-topper-select-${box.id}" class="form-control mb-10">
+                        <option value="">-- Aucun --</option>
+                        <option value="Anniversaire">🎂 Joyeux Anniversaire</option>
+                        <option value="Love">❤️ Love</option>
+                    </select>
+                    
+                    <label class="opt-label mt-2">Bande Personnalisée :</label>
+                    <select id="box-bande-type-${box.id}" class="form-control" onchange="toggleSelect('box-bande-type-${box.id}', 'box-bande-wrapper-${box.id}')">
+                        <option value="">Aucune</option>
+                        <option value="Simple">Texte Court (+12€)</option>
+                        <option value="Long">Texte Long (+15€)</option>
+                    </select>
+                    <div id="box-bande-wrapper-${box.id}" class="hidden"><input type="text" id="box-bande-${box.id}" class="form-control" placeholder="Texte sur ruban..."></div>
+                </div>
+
+                <button class="btn-discover" style="width:100%;" onclick="addBoxToCart('${box.id}', '${box.title}', ${box.priceFleur}, ${box.priceChoco})">Ajouter</button>
+            </div>
+        </div>`).join('');
+}
                 </div>
 
                 <div class="options-box">
@@ -469,8 +498,12 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
         }
     }
 
-    // Options communes
-    if(document.getElementById(`box-topper-${id}`).checked) { finalPrice += 2; details.push("Topper"); }
+    // GESTION NOUVEAU TOPPER MENU DEROULANT
+    const topper = document.getElementById(`box-topper-select-${id}`).value;
+    if(topper) {
+        finalPrice += 2;
+        details.push(`Topper: ${topper}`);
+    }
 
     // DOUDOU CORRIGÉ
     const doudouVal = parseFloat(document.getElementById(`box-doudou-${id}`).value);
@@ -487,7 +520,6 @@ function addBoxToCart(id, title, priceFleur, priceChoco) {
 
     addToCart({ title, price: finalPrice, image: `images/${id === 'box30' ? 'box_choco_30.jpg' : 'box_choco_20.jpg'}`, desc: details.join(' | ') });
 }
-
 // --- 3. LOVE BOX (BASE 55€ + 5€ par lettre choco) ---
 function renderLove() {
     const container = document.getElementById('page-love');
